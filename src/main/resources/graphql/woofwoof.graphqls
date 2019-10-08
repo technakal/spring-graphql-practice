@@ -1,0 +1,17 @@
+type WoofWoof {
+  id: ID!
+  name: String!
+  breed: String!
+  origin: String!
+}
+
+type Query {
+  findAllWoofWoofs: [WoofWoof]!
+  findWoofWoofById(id: ID!): WoofWoof
+}
+
+type Mutation {
+  createNewWoofWoof(name: String!, breed: String!, origin: String!): WoofWoof!
+  deleteWoofWoofById(id: ID!): Boolean
+  updateWoofWoofName(newName: String!, id: ID!): WoofWoof!
+}
