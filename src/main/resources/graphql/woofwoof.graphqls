@@ -11,7 +11,6 @@ type Query {
 }
 
 type Mutation {
-  createNewWoofWoof(name: String!, breed: String!, origin: String!): WoofWoof!
-  deleteWoofWoofById(id: ID!): Boolean
+  deleteWoofWoofBreed(breed: String!): Boolean
   updateWoofWoofName(newName: String!, id: ID!): WoofWoof!
 }

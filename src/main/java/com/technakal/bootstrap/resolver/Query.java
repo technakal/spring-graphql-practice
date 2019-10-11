@@ -2,6 +2,7 @@ package com.technakal.bootstrap.resolver;
 
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 import com.technakal.bootstrap.entity.WoofWoof;
+import com.technakal.bootstrap.exception.WoofWoofNotFoundException;
 import com.technakal.bootstrap.repository.WoofWoofRepository;
 import org.springframework.stereotype.Component;
 
@@ -20,8 +21,14 @@ public class Query implements GraphQLQueryResolver {
     return woofWoofRepository.findAll();
   }
 
-  public Optional<WoofWoof> findWoofWoofById(Long id) {
-    return woofWoofRepository.findById(id);
+  public WoofWoof findWoofWoofById(Long id) {
+
+    Optional<WoofWoof> optionalWoofWoof = woofWoofRepository.findById(id);
+    if(optionalWoofWoof.isPresent()) {
+      return optionalWoofWoof.get();
+    } else {
+      throw new WoofWoofNotFoundException("Woof Woof Not Found", id);
+    }
   }
 
 }

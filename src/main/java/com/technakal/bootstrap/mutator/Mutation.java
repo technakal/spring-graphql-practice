@@ -2,6 +2,7 @@ package com.technakal.bootstrap.mutator;
 
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
 import com.technakal.bootstrap.entity.WoofWoof;
+import com.technakal.bootstrap.exception.BreedNotFoundException;
 import com.technakal.bootstrap.exception.WoofWoofNotFoundException;
 import com.technakal.bootstrap.repository.WoofWoofRepository;
 import org.springframework.stereotype.Component;
@@ -17,18 +18,26 @@ public class Mutation implements GraphQLMutationResolver {
     this.woofWoofRepository = woofWoofRepository;
   }
 
-  public WoofWoof createNewWoofWoof(String name, String breed) {
-    WoofWoof woofWoof = new WoofWoof(name, breed);
-    woofWoofRepository.save(woofWoof);
-    return woofWoof;
-  }
+  public Boolean deleteWoofWoofBreed(String breed) {
+    Boolean deleted = false;
+    Iterable<WoofWoof> allWoofWoofs = woofWoofRepository.findAll();
 
-  public Boolean deleteWoofWoofById(Long id) {
-    woofWoofRepository.deleteById(id);
-    return true;
+    for(WoofWoof w:allWoofWoofs) {
+      if(w.getBreed().equals(breed)) {
+        woofWoofRepository.delete(w);
+        deleted = true;
+      };
+    }
+
+    if(!deleted) {
+      throw new BreedNotFoundException("Breed not found", breed);
+    }
+
+    return deleted;
   }
 
   public WoofWoof updateWoofWoofName(String newName, Long id) {
+
     Optional<WoofWoof> optionalWoofWoof = woofWoofRepository.findById(id);
 
     if(optionalWoofWoof.isPresent()) {
@@ -39,5 +48,7 @@ public class Mutation implements GraphQLMutationResolver {
     } else {
       throw new WoofWoofNotFoundException("Woof Woof Not Found.", id);
     }
+
   }
+
 }
